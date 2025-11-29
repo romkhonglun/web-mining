@@ -1,5 +1,5 @@
 def main():
-    print("Hello from web-mining!")
+    print("Hello from web_mining!")
 
 
 if __name__ == "__main__":
