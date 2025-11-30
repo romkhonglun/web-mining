@@ -13,3 +13,5 @@ wheels/
 *.zip
 *.tar.gz
 *.log
+*.pkl
+*.parquet
