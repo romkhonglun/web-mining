@@ -15,3 +15,7 @@ wheels/
 *.log
 *.pkl
 *.parquet
+
+#Ignore folder input
+input
+.idea
