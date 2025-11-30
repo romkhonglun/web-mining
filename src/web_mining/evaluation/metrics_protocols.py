@@ -1,7 +1,7 @@
 import json
 import multiprocessing
+from collections.abc import Iterable
 from itertools import compress
-from typing import Iterable
 
 import numpy as np
 from tqdm.auto import tqdm
@@ -27,9 +27,7 @@ class AccuracyScore(Metric):
     def calculate(self, y_true: list[np.ndarray], y_pred: list[np.ndarray]) -> float:
         res = np.mean(
             [
-                accuracy_score(
-                    each_labels, convert_to_binary(each_preds, self.threshold)
-                )
+                accuracy_score(each_labels, convert_to_binary(each_preds, self.threshold))
                 for each_labels, each_preds in zip(y_true, y_pred)
             ]
         )
@@ -57,10 +55,7 @@ class RootMeanSquaredError(Metric):
 
     def calculate(self, y_true: list[np.ndarray], y_pred: list[np.ndarray]) -> float:
         res = np.mean(
-            [
-                np.sqrt(mean_squared_error(each_labels, each_preds))
-                for each_labels, each_preds in zip(y_true, y_pred)
-            ]
+            [np.sqrt(mean_squared_error(each_labels, each_preds)) for each_labels, each_preds in zip(y_true, y_pred)]
         )
         return float(res)
 
@@ -70,12 +65,7 @@ class AucScore(Metric):
         self.name = "auc"
 
     def calculate(self, y_true: list[np.ndarray], y_pred: list[np.ndarray]) -> float:
-        res = np.mean(
-            [
-                roc_auc_score(each_labels, each_preds)
-                for each_labels, each_preds in tqdm(zip(y_true, y_pred))
-            ]
-        )
+        res = np.mean([roc_auc_score(each_labels, each_preds) for each_labels, each_preds in tqdm(zip(y_true, y_pred))])
         return float(res)
 
 
@@ -123,10 +113,7 @@ class MrrScore(Metric):
 
     def calculate(self, y_true: list[np.ndarray], y_pred: list[np.ndarray]) -> float:
         mean_mrr = np.mean(
-            [
-                mrr_score(each_labels, each_preds)
-                for each_labels, each_preds in tqdm(zip(y_true, y_pred))
-            ]
+            [mrr_score(each_labels, each_preds) for each_labels, each_preds in tqdm(zip(y_true, y_pred))]
         )
         return float(mean_mrr)
 
@@ -159,10 +146,7 @@ class NdcgScore(Metric):
 
     def calculate(self, y_true: list[np.ndarray], y_pred: list[np.ndarray]) -> float:
         res = np.mean(
-            [
-                ndcg_score(each_labels, each_preds, self.k)
-                for each_labels, each_preds in tqdm(zip(y_true, y_pred))
-            ]
+            [ndcg_score(each_labels, each_preds, self.k) for each_labels, each_preds in tqdm(zip(y_true, y_pred))]
         )
         return float(res)
 

@@ -1,8 +1,8 @@
-from typing import Callable
-
-from sklearn.metrics.pairwise import cosine_distances
 from collections import Counter
+from collections.abc import Callable
+
 import numpy as np
+from sklearn.metrics.pairwise import cosine_distances
 
 
 def intralist_diversity(
@@ -195,14 +195,14 @@ def index_of_dispersion(x: list[int]) -> float:
 
     Examples:
         Given the following categories: Math(25), Economics(42), Chemistry(13), Physical Education (8), Religious Studies (13).
-        >>> N = np.sum(25+42+13+8+13)
+        >>> N = np.sum(25 + 42 + 13 + 8 + 13)
         >>> k = 5
         >>> sq_f2 = np.sum(25**2 + 42**2 + 13**2 + 8**2 + 13**2)
-        >>> iod = ( k * (N**2 - sq_f2)) / ( N**2 * (k-1) )
+        >>> iod = (k * (N**2 - sq_f2)) / (N**2 * (k - 1))
             0.9079992157631604
 
         Validate method:
-        >>> cat = [[1]*25, [2]*42, [3]*13, [4]*8, [5]*13]
+        >>> cat = [[1] * 25, [2] * 42, [3] * 13, [4] * 8, [5] * 13]
         >>> flat_list = [item for sublist in cat for item in sublist]
         >>> index_of_dispersion(flat_list)
             0.9079992157631604

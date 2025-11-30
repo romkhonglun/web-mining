@@ -1,5 +1,6 @@
 from collections import Counter
-from typing import Iterable
+from collections.abc import Iterable
+
 import numpy as np
 
 
@@ -48,6 +49,7 @@ def compute_combinations(n: int, r: int) -> int:
     if r > n:
         return 0
     from math import comb
+
     return comb(n, r)
 
 
@@ -159,7 +161,7 @@ def get_keys_in_dict(id_list: any, dictionary: dict) -> list[any]:
         List[Any]: List of IDs that are also keys in the dictionary.
 
     Examples:
-        >>> get_keys_in_dict(['a', 'b', 'c'], {'a': 1, 'c': 3, 'd': 4})
+        >>> get_keys_in_dict(["a", "b", "c"], {"a": 1, "c": 3, "d": 4})
             ['a', 'c']
     """
     return [id_ for id_ in id_list if id_ in dictionary]
@@ -189,6 +191,4 @@ def check_key_in_all_nested_dicts(dictionary: dict, key: str) -> None:
     """
     for dict_key, sub_dict in dictionary.items():
         if not isinstance(sub_dict, dict) or key not in sub_dict:
-            raise ValueError(
-                f"'{key}' is not present in '{dict_key}' nested dictionary."
-            )
+            raise ValueError(f"'{key}' is not present in '{dict_key}' nested dictionary.")

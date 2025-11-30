@@ -2,11 +2,11 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_distances
 
 from .beyond_accuracy import (
-    IntralistDiversity,
-    Distribution,
-    Serendipity,
-    Novelty,
     Coverage,
+    Distribution,
+    IntralistDiversity,
+    Novelty,
+    Serendipity,
 )
 
 lookup_dict = {

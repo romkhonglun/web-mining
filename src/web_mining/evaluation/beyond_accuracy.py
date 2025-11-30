@@ -1,23 +1,22 @@
-from typing import Iterable, Callable
+from collections.abc import Callable, Iterable
+from itertools import chain, combinations
 
-from sklearn.metrics.pairwise import cosine_distances
-from itertools import combinations, chain
 import numpy as np
+from sklearn.metrics.pairwise import cosine_distances
 
 from .metrics._beyond_accuracy import (
-    intralist_diversity,
-    coverage_fraction,
     coverage_count,
-    serendipity,
+    coverage_fraction,
+    intralist_diversity,
     novelty,
+    serendipity,
 )
-
 from .utils import (
-    compute_normalized_distribution,
     check_key_in_all_nested_dicts,
-    is_iterable_nested_dtype,
     compute_combinations,
+    compute_normalized_distribution,
     get_keys_in_dict,
+    is_iterable_nested_dtype,
 )
 
 
@@ -41,7 +40,7 @@ class IntralistDiversity:
                 'item3': {'vector': [0.3, 0.4]},
                 'item4': {'vector': [0.4, 0.5]}
             }
-        >>> lookup_key = 'vector'
+        >>> lookup_key = "vector"
         >>> pairwise_distance_function = cosine_distances
         >>> div(R, lookup_dict, lookup_key, pairwise_distance_function)
             array([0.00772212, 0.00153965, 0.00048792])
@@ -85,9 +84,7 @@ class IntralistDiversity:
             if len(ids) == 0:
                 divesity_score = np.nan
             else:
-                document_vectors = np.array(
-                    [lookup_dict[id].get(lookup_key) for id in ids]
-                )
+                document_vectors = np.array([lookup_dict[id].get(lookup_key) for id in ids])
                 divesity_score = intralist_diversity(
                     document_vectors,
                     pairwise_distance_function=pairwise_distance_function,
@@ -139,8 +136,7 @@ class IntralistDiversity:
         if n_combinations > max_number_combinations:
             np.random.seed(seed)
             aids_iterable = chain(
-                np.random.choice(R, n_recommendations, replace=False)
-                for _ in range(max_number_combinations)
+                np.random.choice(R, n_recommendations, replace=False) for _ in range(max_number_combinations)
             )
         else:
             aids_iterable = combinations(R, n_recommendations)
@@ -161,15 +157,15 @@ class Distribution:
 
     Examples:
         >>> dist = Distribution()
-        >>> R = np.array([['item1', 'item2'], ['item2', 'item3']])
+        >>> R = np.array([["item1", "item2"], ["item2", "item3"]])
         >>> lookup_dict = {
                 "item1": {"g": "Action", "sg": ["Action", "Thriller"]},
                 "item2": {"g": "Action", "sg": ["Action", "Comedy"]},
                 "item3": {"g": "Comedy", "sg": ["Comedy"]},
             }
-        >>> dist(R, lookup_dict, 'g')
+        >>> dist(R, lookup_dict, "g")
             {'Action': 0.75, 'Comedy': 0.25}
-        >>> dist(R, lookup_dict, 'sg')
+        >>> dist(R, lookup_dict, "sg")
             {'Action': 0.42857142857142855, 'Thriller': 0.14285714285714285, 'Comedy': 0.42857142857142855}
     """
 
@@ -227,7 +223,7 @@ class Coverage:
                 ['item2', 'item3'],
                 ['item4',  'item3']
             ])
-        >>> C = np.array(['item1', 'item2', 'item3', 'item4', 'item5', 'item6'])
+        >>> C = np.array(["item1", "item2", "item3", "item4", "item5", "item6"])
         >>> cov(R, C)
             (4, 0.6666666666666666)
     """
@@ -269,7 +265,7 @@ class Sentiment:
 
     Examples:
         >>> sent = Sentiment()
-        >>> R = np.array([['item1', 'item2'], ['item2', 'item3'], ['item2', 'item5']])
+        >>> R = np.array([["item1", "item2"], ["item2", "item3"], ["item2", "item5"]])
         >>> lookup_dict = {
                 "item1": {"s": 1.00, "na" : []},
                 "item2": {"s": 0.50, "na" : []},
@@ -277,7 +273,7 @@ class Sentiment:
                 "item4": {"s": 0.00, "na" : []},
             }
         >>> lookup_key = "s"
-        >>> sent(R, lookup_dict, 's')
+        >>> sent(R, lookup_dict, "s")
             array([0.75 , 0.375, 0.5 ])
         >>> sent._candidate_sentiment(list(lookup_dict), 1, lookup_dict, lookup_key)
             (1.0, 0.0)
@@ -296,9 +292,7 @@ class Sentiment:
         sentiment_scores = []
         for sample in R:
             ids = get_keys_in_dict(sample, lookup_dict)
-            sentiment_scores.append(
-                np.mean([lookup_dict[id].get(lookup_key) for id in ids])
-            )
+            sentiment_scores.append(np.mean([lookup_dict[id].get(lookup_key) for id in ids]))
         return np.asarray(sentiment_scores)
 
     def _candidate_sentiment(
@@ -347,8 +341,8 @@ class Serendipity:
 
     Examples:
         >>> ser = Serendipity()
-        >>> R = [np.array(['item1', 'item2']), np.array(['item3', 'item4'])]
-        >>> H = [np.array(['itemA', 'itemB']), np.array(['itemC', 'itemD'])]
+        >>> R = [np.array(["item1", "item2"]), np.array(["item3", "item4"])]
+        >>> H = [np.array(["itemA", "itemB"]), np.array(["itemC", "itemD"])]
         >>> lookup_dict = {
                 'item1': {'vector': [0.1, 0.2]},
                 'item2': {'vector': [0.2, 0.3]},
@@ -359,7 +353,7 @@ class Serendipity:
                 'itemC': {'vector': [0.7, 0.8]},
                 'itemD': {'vector': [0.8, 0.9]}
             }
-        >>> lookup_key = 'vector'
+        >>> lookup_key = "vector"
         >>> pairwise_distance_function = cosine_distances
         >>> ser(R, H, lookup_dict, lookup_key, pairwise_distance_function)
             array([0.01734935, 0.00215212])
@@ -403,9 +397,7 @@ class Serendipity:
         """
         # Sanity:
         if len(R) != len(H):
-            raise ValueError(
-                f"The lengths of 'R' and 'H' do not match ({len(R)} != {len(H)})."
-            )
+            raise ValueError(f"The lengths of 'R' and 'H' do not match ({len(R)} != {len(H)}).")
         check_key_in_all_nested_dicts(lookup_dict, lookup_key)
         # =>
         serendipity_scores = []
@@ -420,9 +412,7 @@ class Serendipity:
             if len(r_i_vectors) == 0 or len(ch_i_vectors) == 0:
                 serendipity_score = np.nan
             else:
-                serendipity_score = serendipity(
-                    r_i_vectors, ch_i_vectors, pairwise_distance_function
-                )
+                serendipity_score = serendipity(r_i_vectors, ch_i_vectors, pairwise_distance_function)
             serendipity_scores.append(serendipity_score)
         return np.asarray(serendipity_scores)
 
@@ -448,9 +438,9 @@ class Novelty:
                 'item5': {'popularity': 0.4}
             }
         >>> nov = Novelty()
-        >>> nov(R, lookup_dict, 'popularity')
+        >>> nov(R, lookup_dict, "popularity")
             array([3.82192809, 2.02944684])
-        >>> nov._candidate_novelty(list(lookup_dict), 2, lookup_dict, 'popularity')
+        >>> nov._candidate_novelty(list(lookup_dict), 2, lookup_dict, "popularity")
             (1.5294468445267841, 3.8219280948873626)
     """
 

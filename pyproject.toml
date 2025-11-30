@@ -12,6 +12,11 @@ dependencies = [
     "torch==2.6.0",
     "torchvision==0.21.0",
     "torchaudio==2.6.0",
+    "tqdm>=4.67.1",
+    "polars>=1.35.2",
+    "pyyaml>=6.0.3",
+    "ruff>=0.14.7",
+    "transformers>=4.57.3",
 ]
 [tool.uv.sources]
 torch = [
@@ -36,3 +41,50 @@ explicit = true
 name = "pytorch-cu118"
 url = "https://download.pytorch.org/whl/cu118"
 explicit = true
+
+[tool.ruff]
+
+# Độ dài dòng code
+line-length = 120
+
+# Bật toàn bộ rule quan trọng (lint)
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "W",   # pycodestyle warnings
+    "I",   # isort-like import rules
+    "B",   # bugbear
+    "UP",  # pyupgrade
+]
+
+# Tự động sửa lỗi nếu có thể
+fix = true
+
+# Loại trừ folder không cần check
+exclude = [
+    ".git",
+    ".venv",
+    "venv",
+    "__pycache__",
+    "data",
+    "build",
+    "dist",
+]
+
+# -----------------------
+# ✨ Formatter Settings
+# -----------------------
+[tool.ruff.format]
+quote-style = "double"        # Dùng dấu " thay vì '
+indent-style = "space"        # luôn dùng space
+line-ending = "lf"            # tránh lỗi CRLF/LF
+skip-magic-trailing-comma = false
+docstring-code-format = true  # format code block trong docstring
+
+# ------------------------------------
+# 🧹 Import sorting (thay isort)
+# ------------------------------------
+[tool.ruff.lint.isort]
+combine-as-imports = true
+force-single-line = false
+

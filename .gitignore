@@ -17,5 +17,5 @@ wheels/
 *.parquet
 
 #Ignore folder input
-input
+data/
 .idea
