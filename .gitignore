@@ -15,6 +15,7 @@ wheels/
 *.log
 *.pkl
 *.parquet
+.env
 
 #Ignore folder input
 data/
