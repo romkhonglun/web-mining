@@ -19,6 +19,7 @@ dependencies = [
     "transformers>=4.57.3",
     "pytorch-lightning==2.6.0",
     "loguru>=0.7.3",
+    "typer>=0.20.0",
 ]
 [tool.uv.sources]
 torch = [
