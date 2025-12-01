@@ -1,6 +1,6 @@
-from web_mining.utils._python import create_lookup_dict
+from newsRecSys.utils._python import create_lookup_dict
 import polars as pl
-from web_mining.utils._constants import DEFAULT_ARTICLE_ID_COL
+from newsRecSys.utils._constants import DEFAULT_ARTICLE_ID_COL
 
 try:
     from transformers import AutoTokenizer

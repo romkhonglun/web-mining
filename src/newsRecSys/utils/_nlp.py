@@ -1,7 +1,7 @@
 import torch
 from tqdm import tqdm
 
-from web_mining.utils._python import get_torch_device
+from newsRecSys.utils._python import get_torch_device
 
 try:
     from torch.utils.data import DataLoader, TensorDataset

@@ -5,16 +5,16 @@ import polars as pl
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from web_mining.evaluation import AucScore
-from web_mining.utils._articles_behaviors import map_list_article_id_to_value
-from web_mining.utils._constants import DEFAULT_INVIEW_ARTICLES_COL, DEFAULT_LABELS_COL
-from web_mining.utils._polars import shuffle_rows
-from web_mining.utils._python import (
+from newsRecSys.evaluation import AucScore
+from newsRecSys.utils._articles_behaviors import map_list_article_id_to_value
+from newsRecSys.utils._constants import DEFAULT_INVIEW_ARTICLES_COL, DEFAULT_LABELS_COL
+from newsRecSys.utils._polars import shuffle_rows
+from newsRecSys.utils._python import (
     convert_to_nested_list,
     make_lookup_objects,
     repeat_by_list_values_from_matrix,
 )
-from web_mining.utils._torch import save_checkpoint
+from newsRecSys.utils._torch import save_checkpoint
 from torch.utils.data import DataLoader, Dataset
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm

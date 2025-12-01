@@ -1,4 +1,4 @@
-from web_mining.utils._python import generate_unique_name
+from newsRecSys.utils._python import generate_unique_name
 
 try:
     import polars as pl
