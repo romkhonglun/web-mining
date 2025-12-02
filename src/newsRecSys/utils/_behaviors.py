@@ -90,7 +90,7 @@ def create_binary_labels_column(
         ]
     """
     _check_columns_in_df(df, [inview_col, clicked_col])
-    _COLUMNS = df.columns
+    _COLUMNS = df.collect_schema().names()
     GROUPBY_ID = generate_unique_name(_COLUMNS, "_groupby_id")
 
     df = df.with_row_index(GROUPBY_ID)

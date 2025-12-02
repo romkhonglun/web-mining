@@ -112,14 +112,14 @@ def main(
                 lf_articles=lf_articles,
                 small_user_ids=small_user_ids,
             )
-            df_output = lf_output.collect(streaming=True)
+            df_output = lf_output.collect(engine="streaming")
             logger.info(df_output)
 
         with timer("Test consistency"):
             df_original = (
                 lf_history.sort("user_id")
                 .select("scroll_percentage_fixed")
-                .collect(streaming=True)
+                .collect(engine="streaming")
             )
             x1 = df_original["scroll_percentage_fixed"].to_numpy()
             x2 = df_output["scroll_percentage"].to_numpy()

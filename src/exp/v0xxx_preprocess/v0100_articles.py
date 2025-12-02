@@ -61,7 +61,7 @@ def main(
     with timer("Compute articles"):
         lf_articles = pl.scan_parquet(RAWDATA_DIRS["articles"])
         lf_output = compute_articles(lf_articles)
-        df_output = lf_output.collect(streaming=True)
+        df_output = lf_output.collect(engine="streaming")
         logger.info(df_output)
 
     output_path = OUTPUT_DIR / "dataset.parquet"

@@ -27,7 +27,7 @@ def _check_columns_in_df(df: pl.DataFrame, columns: list[str]) -> None:
     >>> check_columns_in_df(df, columns=["user_id", "not_in"])
         ValueError: Invalid input provided. The dataframe does not contain columns ['not_in'].
     """
-    columns_not_in_df = [col for col in columns if col not in df.columns]
+    columns_not_in_df = [col for col in columns if col not in df.collect_schema().names()]
     if columns_not_in_df:
         raise ValueError(f"Invalid input provided. The DataFrame does not contain columns {columns_not_in_df}.")
 
