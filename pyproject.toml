@@ -5,7 +5,6 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "numpy==2.3.3",
     "pandas==2.0.3",
     "scikit-learn==1.7.2",
     # --- PHẢI THÊM CÁC DÒNG NÀY ---
@@ -84,6 +83,8 @@ dependencies = [
     "urllib3==2.5.0",
     "yarl==1.22.0",
     "pyarrow==20.0.0",
+    "numpy==1.26.4",
+    "tenacity>=9.1.2",
 ]
 [tool.uv.sources]
 torch = [

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import functools
-import gc
 import inspect
 import math
 import os
@@ -126,51 +125,68 @@ class DataLoadersConfig:
         batch_sampler: BatchSamplerConfig | None = None
         collate_fn: dict = MISSING
 
-    train: DataLoaderConfig = DataLoaderConfig(
-        dataset=DatasetConfig(
-            _var_="train_dataset",
-            split="train",
-        ),
-        batch_sampler=DataLoaderConfig.BatchSamplerConfig(
-            dataset={"_var_": "train_dataset"},
-            max_sample_per_user=2,
-            shuffle=True,
-            drop_last=True,
-        ),
-        collate_fn={"_target_": "DataCollator"},
+    # 🔑 FIX: Use field(default_factory=lambda: ...) for all mutable defaults
+
+    train: DataLoaderConfig = field(
+        default_factory=lambda: DataLoadersConfig.DataLoaderConfig(
+            # Must use the full path DataLoadersConfig.DataLoaderConfig here
+            dataset=DatasetConfig(
+                _var_="train_dataset",
+                split="train",
+            ),
+            batch_sampler=DataLoadersConfig.DataLoaderConfig.BatchSamplerConfig(
+                dataset={"_var_": "train_dataset"},
+                max_sample_per_user=2,
+                shuffle=True,
+                drop_last=True,
+            ),
+            collate_fn={"_target_": "DataCollator"},
+        )
     )
-    validation_small: DataLoaderConfig = DataLoaderConfig(
-        dataset=DatasetConfig(
-            _var_="valid_small_dataset",
-            split="validation",
-            small=True,
-        ),
-        batch_sampler=DataLoaderConfig.BatchSamplerConfig(
-            dataset={"_var_": "valid_small_dataset"},
-        ),
-        collate_fn={"_target_": "DataCollator"},
+
+    validation_small: DataLoaderConfig = field(
+        default_factory=lambda: DataLoadersConfig.DataLoaderConfig(
+            dataset=DatasetConfig(
+                _var_="valid_small_dataset",
+                split="validation",
+                small=True,
+            ),
+            batch_sampler=DataLoadersConfig.DataLoaderConfig.BatchSamplerConfig(
+                dataset={"_var_": "valid_small_dataset"},
+            ),
+            collate_fn={"_target_": "DataCollator"},
+        )
     )
-    validation: DataLoaderConfig = DataLoaderConfig(
-        dataset=DatasetConfig(
-            _var_="valid_dataset",
-            split="validation",
-            small=False,
-        ),
-        batch_sampler=DataLoaderConfig.BatchSamplerConfig(
-            dataset={"_var_": "valid_dataset"},
-        ),
-        collate_fn={"_target_": "DataCollator"},
+
+    validation: DataLoaderConfig = field(
+        default_factory=lambda: DataLoadersConfig.DataLoaderConfig(
+            dataset=DatasetConfig(
+                _var_="valid_dataset",
+                split="validation",
+                small=False,
+            ),
+            batch_sampler=DataLoadersConfig.DataLoaderConfig.BatchSamplerConfig(
+                dataset={"_var_": "valid_dataset"},
+            ),
+            collate_fn={"_target_": "DataCollator"},
+        )
     )
-    test: DataLoaderConfig = DataLoaderConfig(
-        dataset=DatasetConfig(
-            _var_="test_dataset",
-            split="test",
-        ),
-        batch_sampler=DataLoaderConfig.BatchSamplerConfig(
-            dataset={"_var_": "test_dataset"},
-        ),
-        collate_fn={"_target_": "DataCollator"},
+
+    test: DataLoaderConfig = field(
+        default_factory=lambda: DataLoadersConfig.DataLoaderConfig(
+            dataset=DatasetConfig(
+                _var_="test_dataset",
+                split="test",
+            ),
+            batch_sampler=DataLoadersConfig.DataLoaderConfig.BatchSamplerConfig(
+                dataset={"_var_": "test_dataset"},
+            ),
+            collate_fn={"_target_": "DataCollator"},
+        )
     )
+
+
+# Assuming SI is available in your environment
 
 
 @dataclass
@@ -191,6 +207,7 @@ class ModelConfig:
             _mode_: str = "call"
             vocab_size: int = 1
             num_hidden_layers: int = 4
+            # Assuming SI is correctly defined/imported for these fields
             hidden_size: int = SI("${model.embedding.output_dim}")
             intermediate_size: int = SI("${eval: ${.hidden_size} * 2}")
             num_attention_heads: int = SI("${eval: ${.hidden_size} // 32}")
@@ -204,7 +221,9 @@ class ModelConfig:
 
         _target_: str = "transformers.AutoModel.from_config"
         _mode_: str = "call"
-        config: TransformerConfig = TransformerConfig()
+
+        # 🔑 FIX: Use default_factory for the mutable TransformerConfig instance
+        config: TransformerConfig = field(default_factory=TransformerConfig)
 
     @dataclass
     class PredictionHeadConfig:
@@ -216,6 +235,7 @@ class ModelConfig:
     @dataclass
     class MetricsMeterConfig:
         _target_: str = "MetricsMeter"
+        # This one was already correct, using default_factory for dict
         loss_weights: dict = field(
             default_factory=lambda: {
                 "bce_loss": 1.0,
@@ -238,12 +258,15 @@ class ModelConfig:
         eta_min: float = 1e-6
 
     _target_: str = "Model"
-    embedding: EmbeddingConfig = EmbeddingConfig()
-    encoder: EncoderConfig = EncoderConfig()
-    prediction_head: PredictionHeadConfig = PredictionHeadConfig()
-    metrics_meter: MetricsMeterConfig = MetricsMeterConfig()
-    optimizer_factory: OptimizerConfig = OptimizerConfig()
-    scheduler_factory: SchedulerConfig = SchedulerConfig()
+    # These outer fields are fine because they use the constructor implicitly,
+    # which is allowed when no arguments are passed.
+    # If they took arguments, they would also need default_factory.
+    embedding: EmbeddingConfig = EmbeddingConfig
+    encoder: EncoderConfig = EncoderConfig
+    prediction_head: PredictionHeadConfig = PredictionHeadConfig
+    metrics_meter: MetricsMeterConfig = MetricsMeterConfig
+    optimizer_factory: OptimizerConfig = OptimizerConfig
+    scheduler_factory: SchedulerConfig = SchedulerConfig
 
 
 @dataclass
@@ -261,10 +284,10 @@ class TrainerConfig:
 
 @dataclass
 class ExperimentConfig:
-    common: CommonConfig = CommonConfig()
-    model: ModelConfig = ModelConfig()
-    dataloaders: DataLoadersConfig = DataLoadersConfig()
-    trainer: TrainerConfig = TrainerConfig()
+    common: CommonConfig = CommonConfig
+    model: ModelConfig = ModelConfig
+    dataloaders: DataLoadersConfig = DataLoadersConfig
+    trainer: TrainerConfig = TrainerConfig
 
     @classmethod
     def create(
@@ -358,7 +381,7 @@ def create_article_feature(
             how="horizontal",
         )
         df = df.sort("article_index")
-        df = df.collect(streaming=True)
+        df = df.collect(engine="streaming")
 
     assert (df["article_index"].to_numpy() == np.arange(len(df))).all()
     return ArticleFeature(
@@ -410,7 +433,7 @@ def create_user_feature(
             how="horizontal",
         )
         df = df.sort("user_index")
-        df = df.collect(streaming=True)
+        df = df.collect(engine="streaming")
 
     assert (df["user_index"].to_numpy() == np.arange(len(df))).all()
     return UserFeature(
@@ -474,7 +497,7 @@ def create_impression_feature(
             .filter(pl.col("user_index") < 10000 if debug else pl.lit(True))
             .with_row_index("impression_index")
         )
-        df = df.collect(streaming=True)
+        df = df.collect(engine="streaming")
 
     if not small and not debug:
         assert (df["impression_index"].to_numpy() == np.arange(len(df))).all()
