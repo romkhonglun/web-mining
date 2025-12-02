@@ -137,7 +137,7 @@ def main(
         lf_articles = pl.scan_parquet(ARTICLE_DIR / "dataset.parquet")
         lf_impressions = pl.scan_parquet(IMPRESSIONS_DIR / "train" / "dataset.parquet")
         lf_output = compute_features(lf_articles, lf_impressions)
-        df_output = lf_output.collect(streaming=True)
+        df_output = lf_output.collect(engine="streaming")
         logger.info(df_output)
 
     with timer("Test consistency"):

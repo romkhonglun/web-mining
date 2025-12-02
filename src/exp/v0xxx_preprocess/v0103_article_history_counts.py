@@ -86,7 +86,7 @@ def main(
                 lf_users=lf_users,
                 split_start_ts=split_start_ts,
             )
-            df_output = lf_output.collect(streaming=True)
+            df_output = lf_output.collect(engine="streaming")
             logger.info(df_output)
 
         with timer("Test consistency"):

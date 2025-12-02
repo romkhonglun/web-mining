@@ -100,7 +100,7 @@ def main(
                 lf_articles=lf_articles,
                 lf_impressions=lf_impressions,
             )
-            df_output = lf_output.collect(streaming=True)
+            df_output = lf_output.collect(engine="streaming")
             logger.info(df_output)
 
         with timer("Test consistency"):
