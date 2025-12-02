@@ -10,6 +10,7 @@ MODELS=(
 )
 DEVICE=0
 
+# shellcheck disable=SC2068
 for MODEL in ${MODELS[@]}; do
     uv run python $MODEL train common.fold=0 trainer.devices=[${DEVICE}] common.overwrite=True
     uv run python $MODEL train common.fold=2 trainer.devices=[${DEVICE}] common.overwrite=True
