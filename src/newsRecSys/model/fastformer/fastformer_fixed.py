@@ -9,7 +9,7 @@ from transformers.models.bert.modeling_bert import (
 import logging
 import torch.nn as nn
 import torch
-from ebrec.models.fastformer.fastformer_wu import StandardFastformerEncoder
+from newsRecSys.model.fastformer.fastformer_wu import StandardFastformerEncoder
 
 
 @dataclass
