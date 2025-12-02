@@ -1,14 +1,13 @@
 #! /usr/bin/env python
 
-import requests
-import shutil
 import zipfile
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from pathlib import Path
 from urllib.parse import urlparse
 
+import requests
 import typer
 from loguru import logger
-from pathlib import Path
 from tqdm.auto import tqdm
 
 from exputils.const import DATA_DIR

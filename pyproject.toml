@@ -83,6 +83,7 @@ dependencies = [
     "tzdata==2025.2",
     "urllib3==2.5.0",
     "yarl==1.22.0",
+    "pyarrow==20.0.0",
 ]
 [tool.uv.sources]
 torch = [
@@ -109,6 +110,10 @@ url = "https://download.pytorch.org/whl/cu118"
 explicit = true
 
 [tool.ruff]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["*"]
 
 # Độ dài dòng code
 line-length = 120

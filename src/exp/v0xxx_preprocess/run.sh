@@ -2,7 +2,7 @@
 
 FILE_DIR=$(cd $(dirname $0); pwd)
 OPTIONS="--skip"
-# OPTIONS="--overwrite"
+#OPTIONS="--overwrite"
 
 # Base datasets
 uv run python $FILE_DIR/v0001_download_rawdata.py download
